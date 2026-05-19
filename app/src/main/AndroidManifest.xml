@@ -12,10 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JeuCalculMental">
         <activity
-            android:name=".GameSettings"
-            android:exported="false" />
-        <activity
-            android:name=".ActivityGame"
+            android:name=".activity_hightscore"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
