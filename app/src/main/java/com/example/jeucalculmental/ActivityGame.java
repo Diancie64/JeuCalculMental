@@ -1,9 +1,7 @@
 package com.example.jeucalculmental;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,27 +9,26 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+public class ActivityGame extends AppCompatActivity {
 
-    private Button btnGame;
+    Difficulty difficulty;
+    int nbrQuestion;
+    TextView screen;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_game);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        btnGame = findViewById(R.id.button_play);
-        btnGame.setOnClickListener(v -> {
-            Intent intent = new Intent(this,GameSettings.class);
-            startActivity(intent);
-        });
+        difficulty = (Difficulty) getIntent().getSerializableExtra("difficulty");
+        screen = findViewById(R.id.screen);
     }
+
 
 
 }
