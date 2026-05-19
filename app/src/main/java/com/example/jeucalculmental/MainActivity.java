@@ -1,6 +1,8 @@
 package com.example.jeucalculmental;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +11,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+
+    Button play;
+    Button highscore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +25,16 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    play = findViewById(R.id.button_play);
+    play.setOnClickListener(v -> {
+        Intent intent = new Intent(this, GameSettings.class);
+        startActivity(intent);
+    });
+    highscore = findViewById(R.id.button_high_score);
+    highscore.setOnClickListener(v -> {
+        Intent intent = new Intent(this, ActivityHighscore.class);
+        startActivity(intent);
+    });
+
     }
 }

@@ -23,9 +23,9 @@
             android:text="@string/play" />
 
         <Button
-            android:id="@+id/button_hight_score"
+            android:id="@+id/button_high_score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/hight_score" />
+            android:text="@string/high_score" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

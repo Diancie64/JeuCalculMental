@@ -17,5 +17,5 @@
     <string name="hard">Difficile</string>
     <string name="start">Démarrer les questions</string>
     <string name="play">Jouer</string>
-    <string name="hight_score">Meilleure Score</string>
+    <string name="high_score">Meilleur Score</string>
 </resources>

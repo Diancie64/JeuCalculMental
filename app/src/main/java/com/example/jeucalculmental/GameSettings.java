@@ -14,7 +14,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class GameSettings extends AppCompatActivity {
     RadioGroup difficultySelector;
-    int selectedButton;
     Difficulty difficulty = Difficulty.EASY;
     Button start;
 
@@ -23,7 +22,7 @@ public class GameSettings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_game_settings);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.game_settings), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
