@@ -18,4 +18,7 @@
     <string name="start">Démarrer les questions</string>
     <string name="play">Jouer</string>
     <string name="high_score">Meilleur Score</string>
+    <string name="comma">,</string>
+    <string name="delete">⌫</string>
+    <string name="correct">Correct</string>
 </resources>
