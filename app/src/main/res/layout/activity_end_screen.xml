@@ -39,7 +39,7 @@
             android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/nameInputLayout"
+            android:id="@+id/InputLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2">

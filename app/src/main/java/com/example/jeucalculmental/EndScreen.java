@@ -1,6 +1,10 @@
 package com.example.jeucalculmental;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -15,6 +19,10 @@ import com.google.android.material.textfield.TextInputLayout;
 public class EndScreen extends AppCompatActivity {
     TextView scoreText;
     TextInputLayout pseudo;
+    private DatabaseHelper dbHelper;
+    private SQLiteDatabase db;
+    Difficulty difficulty;
+    String score;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +34,30 @@ public class EndScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        Difficulty difficulty = (Difficulty) getIntent().getSerializableExtra("difficulty");
-        String score = String.valueOf(getIntent().getIntExtra("score", 0));
+        difficulty = (Difficulty) getIntent().getSerializableExtra("difficulty");
+        score = String.valueOf(getIntent().getIntExtra("score", 0));
 
         pseudo = findViewById(R.id.nameInputLayout);
         scoreText = findViewById(R.id.score);
 
         scoreText.setText(score);
+
     }
+
+    private void AddScoreToBase(){
+        String nom= String.valueOf(pseudo.getEditText());
+
+        // On réutilise le même helper, même base
+        dbHelper = new DatabaseHelper(this);
+        db = dbHelper.getWritableDatabase();
+
+
+        // Utilisation normale
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.COL_NOM, nom);
+        values.put(DatabaseHelper.COL_SCORE, score);
+        values.put(DatabaseHelper.COL_DIFFICULTE, String.valueOf(difficulty));
+        db.insert(DatabaseHelper.TABLE_NAME, null, values);
+    }
+
 }

@@ -25,6 +25,12 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Initialise la base dès le lancement
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        dbHelper.getWritableDatabase(); // Force la création si elle n'existe pas
+        dbHelper.close();
+
     play = findViewById(R.id.button_play);
     play.setOnClickListener(v -> {
         Intent intent = new Intent(this, GameSettings.class);
