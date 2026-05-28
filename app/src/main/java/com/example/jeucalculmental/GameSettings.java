@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,10 +46,21 @@ public class GameSettings extends AppCompatActivity {
 
         start = findViewById(R.id.start);
         start.setOnClickListener(v -> {
+            int checkedId = difficultySelector.getCheckedRadioButtonId();
+
+            if (checkedId == -1) {
+                // aucune difficulté choisie
+                // tu peux afficher un message
+                Toast.makeText(this, "Choisissez une difficulté", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // ici une difficulté est choisie
             Intent intent = new Intent(this, ActivityGame.class);
             intent.putExtra("difficulty", difficulty);
             startActivity(intent);
         });
+
 
 
     }
