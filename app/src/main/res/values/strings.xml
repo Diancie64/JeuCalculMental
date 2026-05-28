@@ -21,4 +21,6 @@
     <string name="comma">,</string>
     <string name="delete">⌫</string>
     <string name="correct">Correct</string>
+    <string name="score">Fin de la partie !\n\n\n Score</string>
+    <string name="pseudo">Entrez votre nom</string>
 </resources>

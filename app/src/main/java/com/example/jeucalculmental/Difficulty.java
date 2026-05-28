@@ -1,7 +1,8 @@
 package com.example.jeucalculmental;
 
 public enum Difficulty {
-    EASY,
+
+    HARD,
     MEDIUM,
-    HARD
+    EASY
 }

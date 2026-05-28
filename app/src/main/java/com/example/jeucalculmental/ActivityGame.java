@@ -1,7 +1,10 @@
 package com.example.jeucalculmental;
 
+import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -11,15 +14,18 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.EmptyStackException;
 import java.util.Random;
 import java.util.Timer;
 
 public class ActivityGame extends AppCompatActivity {
+    int hp=0;
+    int score = 0;
     ProgressBar progressBar;
-
     Difficulty difficulty;
     TextView screen;
     TextView input;
+    TextView life;
     double resultat;
     GameTimer timer;
 
@@ -33,7 +39,7 @@ public class ActivityGame extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        TextView timerText = findViewById(R.id.timer);
+        // Clavier
         Button btn0 = findViewById(R.id.btn0);
         Button btn1 = findViewById(R.id.btn1);
         Button btn2 = findViewById(R.id.btn2);
@@ -61,27 +67,36 @@ public class ActivityGame extends AppCompatActivity {
         btnOk.setOnClickListener(v-> manageClick("ok"));
         btnDelete.setOnClickListener(v-> manageClick("del"));
 
+        // UI + Systèmes
+        TextView timerText = findViewById(R.id.timer);
         progressBar = findViewById(R.id.progressBar);
         difficulty = (Difficulty) getIntent().getSerializableExtra("difficulty");
         screen = findViewById(R.id.screen);
         input = findViewById(R.id.input);
+        life = findViewById(R.id.life);
+
+
+
 
         int difficultyTime = 100;
 
+        // Gestion du temps en fonction de la difficulté
         switch (difficulty){
             case EASY:
                 difficultyTime = 120;
+                hp = 3;
                 break;
             case MEDIUM:
                 difficultyTime = 80;
+                hp = 2;
                 break;
             case HARD:
                 difficultyTime = 40;
+                hp = 1;
                 break;
         }
 
-        progressBar = findViewById(R.id.progressBar);
-
+        // Mise en place du timer
         timer = new GameTimer(difficultyTime, progressBar, new GameTimer.TimerListener() {
             @Override
             public void onTick(int timeLeft) {
@@ -91,27 +106,83 @@ public class ActivityGame extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                endGame();
+                removeLife();
             }
         });
 
         timer.start();
 
+        updateLifeDisplay(hp, difficulty);
 
-
-        resultat = question();
-
+        question();
     }
 
+    private void removeLife(){
+        /// Perte d'une vie
+        hp--;
+        errorShake(life);
+        updateLifeDisplay(hp, difficulty);
+        input.setText("");
+        if (hp == 0){
+            endGame();
+        }
+    }
+
+    private void errorShake(TextView view) {
+        /// Animation en cas d'erreur
+        float delta = 20f;
+
+        ObjectAnimator animator = ObjectAnimator.ofFloat(
+                view,
+                "translationX",
+                0, -delta, delta, -delta, delta, -delta / 2, delta / 2, 0
+        );
+
+        animator.setDuration(400);
+        animator.start();
+    }
+
+
+
+    private void updateLifeDisplay(int hp, Difficulty difficulty) {
+        /// Mise à jour de l'affichage des PV
+        int length = (difficulty.ordinal() + 1) * 2;
+        String text;
+        switch (hp){
+            case 3:
+                text = "♥ ♥ ♥";
+                break;
+            case 2:
+                text = "♥ ♥ ❌";
+                break;
+            case 1:
+                text = "♥ ❌ ❌";
+                break;
+            default:
+                text = "❌ ❌ ❌";
+                break;
+        }
+        text = text.substring(0,length - 1);
+        life.setText(text);
+    }
+
+
     private void endGame() {
-        // pass
+        /// Gestion de fin du jeu
+        Intent intent = new Intent(this, EndScreen.class);
+        intent.putExtra("difficulty", difficulty);
+        intent.putExtra("score", score);
+        startActivity(intent);
     }
 
     private void manageClick(String number){
+        /// Gestion du clavier
         String txt = input.getText().toString();
         switch (number){
             case "ok":
-                validateAnswer();
+                if (!txt.isEmpty()){
+                    validateAnswer();
+                }
                 break;
             case "del":
                 if (!txt.isEmpty()) {
@@ -130,25 +201,34 @@ public class ActivityGame extends AppCompatActivity {
     }
 
     private void validateAnswer() {
-        double answer = Double.parseDouble(input.getText().toString().replace(",", "."));
-
+        /// Vérifie les réponses soumises
+        double answer = getAnswer();
         if (answer == resultat){
+            score += 100;
             timer.reset();
-            resultat = question();
+            question();
             input.setText("");
             timer.start();
+        }else{
+            removeLife();
         }
     }
 
+    private double getAnswer(){
+        /// Récupère la réponse dans la TextView
+        String text = input.getText().toString().replace(",", ".");
+        return Double.parseDouble(text);
+    }
 
-    private double question(){
-        int min = -10;
+
+    private void question(){
+        /// Génère une question aléatoire
+        int min = 0;
         int max = 10;
         Random random = new Random();
         int firstNumber = random.nextInt(max - min + 1) + min;
         int secondNumber = random.nextInt(max - min + 1) + min;
         Operation operation = Operation.values()[random.nextInt(Operation.values().length)];
-        double resultat;
         String affichage;
 
         switch (operation){
@@ -173,9 +253,7 @@ public class ActivityGame extends AppCompatActivity {
                 resultat = 0;
                 break;
         }
-
         screen.setText(affichage);
-        return resultat;
     }
 
 
