@@ -1,6 +1,7 @@
 package com.example.jeucalculmental;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -18,8 +19,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class EndScreen extends AppCompatActivity {
     TextView scoreText;
-    TextInputLayout pseudo;
-    private DatabaseHelper dbHelper;
+    TextInputEditText pseudo;
     private SQLiteDatabase db;
     Difficulty difficulty;
     String score;
@@ -42,22 +42,27 @@ public class EndScreen extends AppCompatActivity {
 
         scoreText.setText(score);
 
+        pseudo.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                finishGame();
+                return true;
+            }
+            return false;
+        });
     }
 
-    private void AddScoreToBase(){
-        String nom= String.valueOf(pseudo.getEditText());
+    private void finishGame() {
+        addScoreToBase();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 
-        // On réutilise le même helper, même base
-        dbHelper = new DatabaseHelper(this);
-        db = dbHelper.getWritableDatabase();
-
-
-        // Utilisation normale
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COL_NOM, nom);
-        values.put(DatabaseHelper.COL_SCORE, score);
-        values.put(DatabaseHelper.COL_DIFFICULTE, String.valueOf(difficulty));
-        db.insert(DatabaseHelper.TABLE_NAME, null, values);
+    private void addScoreToBase(){
+        String nom = pseudo.getText().toString().trim();
+        ScoreDatabase db = new ScoreDatabase(this);
+        db.addScore(nom, difficulty.name(), Integer.parseInt(score));
     }
 
 }

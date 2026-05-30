@@ -26,12 +26,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Initialise la base dès le lancement
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        dbHelper.getWritableDatabase(); // Force la création si elle n'existe pas
-        dbHelper.close();
-
-    play = findViewById(R.id.button_play);
+        play = findViewById(R.id.button_play);
     play.setOnClickListener(v -> {
         Intent intent = new Intent(this, GameSettings.class);
         startActivity(intent);

@@ -1,45 +1,63 @@
 package com.example.jeucalculmental;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.widget.RadioGroup;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
 
 public class ActivityHighscore extends AppCompatActivity {
 
-    private DatabaseHelper dbHelper;
-    private SQLiteDatabase db;
+    RadioGroup difficultySelector;
+    Difficulty difficulty;
+    RecyclerView scoreRecycler;
 
-    TextView textviewTest  ;
-
-
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_highscore);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        textviewTest = findViewById(R.id.textView2);
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        textviewTest.setText(dbHelper.afficherTout());
-        dbHelper.close();
+        difficultySelector = findViewById(R.id.difficulty);
+        scoreRecycler = findViewById(R.id.scoreRecycler);
 
+        scoreRecycler.setLayoutManager(new LinearLayoutManager(this));
+
+        difficulty = Difficulty.EASY;
+        difficultySelector.check(R.id.radioButtonFacile);
+
+        updateList();
+
+        difficultySelector.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radioButtonFacile) difficulty = Difficulty.EASY;
+            else if (checkedId == R.id.radioButtonMoyenne) difficulty = Difficulty.MEDIUM;
+            else if (checkedId == R.id.radioButtonDifficile) difficulty = Difficulty.HARD;
+
+            updateList();
+        });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        dbHelper.close(); // Toujours fermer proprement
+    private void updateList() {
+        ScoreDatabase db = new ScoreDatabase(this);
+        List<ScoreDatabase.ScoreEntry> list = db.getScoresByDifficulty(difficulty.name());
+
+        ScoreAdapter adapter = new ScoreAdapter(list);
+        scoreRecycler.setAdapter(adapter);
     }
+
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">JeuCalculMental</string>
+    <string name="app_name">Calcul Mental</string>
     <string name="textview">Calcul</string>
     <string name="button7">7</string>
     <string name="button8">8</string>
@@ -23,4 +23,8 @@
     <string name="correct">Correct</string>
     <string name="score">Fin de la partie !\n\n\n Score</string>
     <string name="pseudo">Entrez votre nom</string>
+    <string name="score_table">Tableau des scores</string>
+    <string name="difficulty">Difficulté :</string>
+    <string name="name">Pseudo</string>
+    <string name="points">Score</string>
 </resources>
