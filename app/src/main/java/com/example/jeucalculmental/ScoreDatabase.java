@@ -50,6 +50,13 @@ public class ScoreDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
+    // reset
+    public void resetDatabase(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("DELETE FROM scores");
+    }
+
 
     // -----------------------------
     // RÉCUPÉRATION DES SCORES PAR DIFFICULTÉ
@@ -59,7 +66,7 @@ public class ScoreDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT pseudo, difficulty, score FROM scores WHERE difficulty = ? ORDER BY score DESC",
+                "SELECT pseudo, difficulty, score FROM scores WHERE difficulty = ? ORDER BY score DESC LIMIT 10",
                 new String[]{difficulty}
         );
 

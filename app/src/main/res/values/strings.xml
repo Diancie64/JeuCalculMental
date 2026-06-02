@@ -18,7 +18,7 @@
     <string name="start">Démarrer les questions</string>
     <string name="play">Jouer</string>
     <string name="high_score">Meilleur Score</string>
-    <string name="comma">,</string>
+    <string name="minus">-</string>
     <string name="delete">⌫</string>
     <string name="correct">Correct</string>
     <string name="score">Fin de la partie !\n\n\n Score</string>

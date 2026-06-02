@@ -41,6 +41,7 @@ public class ActivityGame extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        // Suppression du retour en arrière
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -73,7 +74,7 @@ public class ActivityGame extends AppCompatActivity {
         btn7.setOnClickListener(v-> manageClick("7"));
         btn8.setOnClickListener(v-> manageClick("8"));
         btn9.setOnClickListener(v-> manageClick("9"));
-        btnComma.setOnClickListener(v-> manageClick(","));
+        btnComma.setOnClickListener(v-> manageClick("-"));
         btnOk.setOnClickListener(v-> manageClick("ok"));
         btnDelete.setOnClickListener(v-> manageClick("del"));
 
@@ -88,22 +89,24 @@ public class ActivityGame extends AppCompatActivity {
 
 
 
-        int difficultyTime = 100;
+        int difficultyTime;
 
         // Gestion du temps en fonction de la difficulté
         switch (difficulty){
             case EASY:
-                difficultyTime = 120;
+                difficultyTime = 30;
                 hp = 3;
                 break;
             case MEDIUM:
-                difficultyTime = 80;
+                difficultyTime = 15;
                 hp = 2;
                 break;
             case HARD:
-                difficultyTime = 40;
+                difficultyTime = 5;
                 hp = 1;
                 break;
+            default:
+                difficultyTime = 0;
         }
 
         // Mise en place du timer
@@ -117,6 +120,7 @@ public class ActivityGame extends AppCompatActivity {
             @Override
             public void onFinish() {
                 removeLife();
+                question();
             }
         });
 
@@ -126,9 +130,6 @@ public class ActivityGame extends AppCompatActivity {
 
         question();
     }
-
-
-    @SuppressLint("GestureBackNavigation")
 
 
     private void removeLife(){
@@ -203,8 +204,8 @@ public class ActivityGame extends AppCompatActivity {
                     input.setText(txt.substring(0, txt.length() - 1));
                 }
                 break;
-            case ",":
-                if (!txt.contains(",")){
+            case "-":
+                if (txt.isEmpty()){
                     input.append(number);
                 }
                 break;
@@ -219,10 +220,7 @@ public class ActivityGame extends AppCompatActivity {
         double answer = getAnswer();
         if (answer == resultat){
             score += 100;
-            timer.reset();
             question();
-            input.setText("");
-            timer.start();
         }else{
             removeLife();
         }
@@ -236,8 +234,11 @@ public class ActivityGame extends AppCompatActivity {
 
 
     private void question(){
+        timer.reset();
+        input.setText("");
+        timer.start();
         /// Génère une question aléatoire
-        int min = 0;
+        int min = -10;
         int max = 10;
         Random random = new Random();
         int firstNumber = random.nextInt(max - min + 1) + min;
@@ -259,6 +260,10 @@ public class ActivityGame extends AppCompatActivity {
                 resultat = firstNumber * secondNumber;
                 break;
             case DIVIDE:
+                if (firstNumber % secondNumber != 0){
+                    question();
+                    return;
+                }
                 affichage = firstNumber + " / " + secondNumber;
                 resultat = (float) firstNumber / secondNumber;
                 break;
